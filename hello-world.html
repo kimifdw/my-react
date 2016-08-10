@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+</head>
+<body>
+<div id="app"></div>
+<script src="react/build/react.js"></script>
+<script src="react/build/react-dom.js"></script>
+<script>
+    ReactDOM.render(
+            // demo1
+//            React.DOM.h1(null, "Hello World!"),
+
+            // demo2【DOM元素带标签】
+//            React.DOM.h2(
+//                    {
+//                        id: 'helloWorld'
+//                    },
+//                    "Hello world!"),
+
+            // demo3
+//            React.DOM.h3(
+//                    {id: "my-heading"},
+//                    React.DOM.span(null, "hello"),
+//                    " world!"
+//            ),
+
+            // demo4[标签嵌套标签】
+//            React.DOM.h4(
+//                    {id: "my-heading"},
+//                    React.DOM.span(null,
+//                            React.DOM.em(null, "Hell"), "o"),
+//                    " world!"
+//            ),
+
+            // demo5【在DOM中使用className
+//            React.DOM.h5(
+//                    {
+//                        className: "pretty",
+//                        htmlFor: "me"
+//                    },
+//                    "Hello World!"
+//            ),
+
+            // demo6【在DOM中使用style
+            React.DOM.h6(
+                    {
+                        style: {
+                            background: "black",
+                            color: "white",
+                            fontFamily: "Verdana"
+                        }
+                    },
+                    "Hello World!"
+            ),
+            document.getElementById("app")
+    )
+</script>
+</body>
+</html>
