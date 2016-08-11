@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的组件</title>
+</head>
+<body>
+<div id="myComponent"></div>
+
+<div id="parent">
+    <button id="ok">OK</button>
+    <button id="cancel">Cancel</button>
+</div>
+
+<script src="react/build/react.js"></script>
+<script src="react/build/react-dom.js"></script>
+<script>
+
+    document.getElementById('parent').addEventListener('click', function (event) {
+        var button = event.target;
+
+        switch (button.id) {
+            case 'ok':
+                console.log('OK!');
+                break;
+            case 'cancel':
+                console.log("cancel!");
+                break;
+            default:
+                new Error('Unexpected button ID');
+        }
+    });
+
+    <!--React.createClass:实现render()方法 -->
+    var Component = React.createClass({
+        // 声明多个属性
+        propTypes: {
+            firstName: React.PropTypes.string.isRequired,
+            middleName: React.PropTypes.string,
+            familyName: React.PropTypes.string.isRequired,
+            address: React.PropTypes.string
+        },
+        // 设置默认值
+        getDefaultProps: function () {
+            return {
+                familyName: 'Bob',
+                address: 'n/a'
+            }
+        },
+        // 初始化state
+        getInitialState: function () {
+            return {
+                text: this.props.firstName
+            }
+        },
+        // 改变textarea时触发
+        _textChange: function (ev) {
+            this.setState({
+                text: ev.target.value
+            })
+        },
+        render: function () {
+            return React.DOM.div(null,
+                    React.DOM.textarea({
+                        value: this.state.text,
+                        onChange: this._textChange
+                    }),
+                    React.DOM.h3(null, this.state.text.length)
+            )
+        }
+    });
+    // 2. 利用createFactory
+    var ComponentFactory = React.createFactory(Component);
+    ReactDOM.render(
+            // 创建组件。
+            // 1.利用React.createElement
+            React.createElement(Component, {
+                firstName: "james"
+            }),
+            //ComponentFactory(),
+            //React.createElement("span", null, "Hello world!"),
+            document.getElementById("myComponent")
+    );
+
+
+</script>
+</body>
+</html>
