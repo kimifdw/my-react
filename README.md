@@ -45,6 +45,7 @@ React:UP & RUNNING 笔记
         });
     ```
     > Default Property Values[默认值]
+    
     ```react
     getDefaultProps: function() {
         return {
@@ -89,6 +90,7 @@ React:UP & RUNNING 笔记
     2. this.state 读取值
     3. 利用shouldComponentUpdate()来控制组件的更新
     > 初始化
+    
     ```react
     getInitialState: function () {
         return {
