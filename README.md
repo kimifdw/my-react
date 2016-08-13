@@ -32,6 +32,7 @@ React:UP & RUNNING 笔记
     React.createElement(Component,{name: "kimifdw"})
     ```
     > propTypes[添加多属性]
+    
     ```react
     var Component = React.createClass({
             // 声明多个属性
