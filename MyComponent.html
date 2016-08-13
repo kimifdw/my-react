@@ -11,9 +11,9 @@
     <button id="ok">OK</button>
     <button id="cancel">Cancel</button>
 </div>
-
 <script src="react/build/react.js"></script>
 <script src="react/build/react-dom.js"></script>
+<script src="react/build/react-with-addons.js"></script>
 <script>
 
     document.getElementById('parent').addEventListener('click', function (event) {
@@ -31,15 +31,78 @@
         }
     });
 
+    // Mixin日志
+    var logMixin = {
+        _log: function (methodName, args) {
+            console.log(this.name + '::' + methodName, args);
+        },
+        componentDidUpdate: function () {
+            this._log('componentDidUpdate', arguments);
+        },
+        componentWillMount: function () {
+            this._log('componentWillMount', arguments);
+        },
+        componentDidMount: function () {
+            this._log('componentDidMount', arguments);
+        },
+        componentWillUnmount: function () {
+            this._log('componentWillUnmount', arguments);
+        }
+    };
+    //  计数
+    var Counter = React.createClass({
+        name: 'counter',
+        // 如改变的长度一致,不会触发Counter组件的render()
+        mixins: [React.addons.PureRenderMixin],
+        propTypes: {
+            count: React.PropTypes.number.isRequired
+        },
+//        shouldComponentUpdate: function (nextProps, nextState_ignore) {
+//            console.log("nextProps:" + nextProps.count + ",count:" + this.props.count);
+//            return nextProps.count !== this.props.count;
+//        },
+        render: function () {
+            console.log(this.name + '::render()');
+            return React.DOM.span(null, this.props.count);
+        }
+    });
+
     <!--React.createClass:实现render()方法 -->
     var Component = React.createClass({
+        name: 'Component',
         // 声明多个属性
         propTypes: {
             firstName: React.PropTypes.string.isRequired,
             middleName: React.PropTypes.string,
             familyName: React.PropTypes.string.isRequired,
-            address: React.PropTypes.string
+            address: React.PropTypes.string,
+            defaultValue: React.PropTypes.string
         },
+        //
+        //mixins: [logMixin],
+        // 设置公共日志
+//        _log: function (methodName, args) {
+//            console.log(methodName, args);
+//        },
+//        componentWillUpdate: function () {
+//            this._log('componentWillUpdate', arguments);
+//        },
+//        componentDidUpdate: function (oldProps, oldState) {
+//            this._log('componentDidUpdate', arguments);
+//            // 如果text长度大于3,则替换为原来的值
+//            if (this.state.text.length > 3) {
+//                this.replaceState(oldState);
+//            }
+//        },
+//        componentWillMount: function () {
+//            this._log('componentWillMount', arguments);
+//        },
+//        componentDidMount: function () {
+//            this._log('componentDidMount', arguments);
+//        },
+//        componentWillUnmount: function () {
+//            this._log('componentWillUnmount', arguments);
+//        },
         // 设置默认值
         getDefaultProps: function () {
             return {
@@ -50,7 +113,7 @@
         // 初始化state
         getInitialState: function () {
             return {
-                text: this.props.firstName
+                text: this.props.defaultValue
             }
         },
         // 改变textarea时触发
@@ -59,30 +122,56 @@
                 text: ev.target.value
             })
         },
+        // 修改组件属性
+        componentWillReceiveProps: function (newProps) {
+            this.setState({
+                text: newProps.defaultValue
+            })
+        },
         render: function () {
+            console.log(this.name + '::render()');
+            var counter = null;
+            if (this.state.text.length > 0) {
+                counter = React.DOM.h3(null,
+                        React.createElement(Counter, {
+                            count: this.state.text.length
+                        })
+                );
+            }
             return React.DOM.div(null,
                     React.DOM.textarea({
                         value: this.state.text,
                         onChange: this._textChange
                     }),
-                    React.DOM.h3(null, this.state.text.length)
+                    counter
+                    //React.DOM.h3(null, this.state.text.length)
             )
         }
     });
+
+
     // 2. 利用createFactory
     var ComponentFactory = React.createFactory(Component);
-    ReactDOM.render(
+    var myTextAreaCounter = ReactDOM.render(
             // 创建组件。
             // 1.利用React.createElement
             React.createElement(Component, {
-                firstName: "james"
+                firstName: "james",
+                defaultValue: "Bob"
             }),
             //ComponentFactory(),
             //React.createElement("span", null, "Hello world!"),
             document.getElementById("myComponent")
     );
+    // 设置state新值【不推荐】
+    myTextAreaCounter.setState({text: "Hello outside world!"});
+    // 利用属性来修改组件的值
+    myTextAreaCounter.componentWillReceiveProps({defaultValue: "hello james"});
+    // 获取main parent dom结点
+    var reactAppNode = ReactDOM.findDOMNode(myTextAreaCounter);
 
-
+    console.log(reactAppNode.parentNode === document.getElementById('myComponent'));
+    console.log("props:" + myTextAreaCounter.props.defaultValue + ",state:" + myTextAreaCounter.state.text);
 </script>
 </body>
 </html>
