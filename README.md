@@ -98,6 +98,13 @@ React:UP & RUNNING 笔记
         }
     }
     ```
+    > 设置值
+    ```react
+    this.setState({
+         data: this._preSearchData,
+         search: false
+    });
+    ```
 4. ReactDom.findDOMNode()
    - 获取组件DOM结点
     
